@@ -335,9 +335,9 @@ If this research codebase or methodology contributes to your academic work, plea
 
 ```bibtex
 @software{roy2024mentalhealthsignal,
-  author = {Roy, Tuhin Suvra},
+  author = {Roy, Tuhinsuvra},
   title = {Mental Health Signal: Machine Learning Prediction of Student Well-Being via Behavioral Rhythms},
-  year = {2024},
+  year = {2026},
   publisher = {GitHub},
   howpublished = {\url{https://mentalhealthpredictor-dhum.onrender.com}},
   url = {https://github.com/tuhinsuvraroy-tsr/MentalHealthPredictionModel}
