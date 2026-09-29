@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mental Health Signal — Student Wellness Analytics</title>
+<meta name="description" content="Predictive student mental health and daily rhythm analytics powered by machine learning." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="noise-overlay" aria-hidden="true"></div>
+<div class="ambient-glow" id="ambient-glow" aria-hidden="true"></div>
+<canvas class="ambient-canvas" id="ambient-canvas" aria-hidden="true"></canvas>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-top-row">
+      <span class="eyebrow">
+        <span class="eyebrow-icon">✦</span> Student Wellness Analytics
+      </span>
+      <div class="api-status-pill" id="api-status-pill" title="Click to test or switch connection">
+        <span class="status-dot checking" id="status-dot"></span>
+        <span class="status-text" id="status-text">Checking backend…</span>
+      </div>
+    </div>
+    <h1 class="title">Mental Health <em>Signal</em></h1>
+    <p class="subtitle">A predictive reading of how digital habits, sleep, physical movement, and perceived strain shape your wellness baseline.</p>
+
+    <!-- Quick Scenario Presets -->
+    <div class="presets-bar" aria-label="Sample test presets">
+      <span class="presets-label">Quick Scenarios:</span>
+      <div class="preset-chips">
+        <button type="button" class="chip-btn" data-preset="balanced">
+          <span class="chip-icon">🌿</span> Balanced Routine
+        </button>
+        <button type="button" class="chip-btn" data-preset="finals">
+          <span class="chip-icon">⚡</span> Finals Crunch
+        </button>
+        <button type="button" class="chip-btn" data-preset="nightowl">
+          <span class="chip-icon">🌙</span> Night Owl
+        </button>
+        <button type="button" class="chip-btn" data-preset="minimalist">
+          <span class="chip-icon">☀️</span> Active Minimalist
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- FORM PANEL -->
+  <section class="panel form-panel" id="form-card" aria-labelledby="form-heading">
+    <div class="form-spotlight" id="form-spotlight" aria-hidden="true"></div>
+    <form id="predict-form" novalidate>
+
+      <!-- Section 01: Profile -->
+      <fieldset class="group">
+        <legend><span class="legend-index">01</span> Student Profile</legend>
+        <div class="grid grid-3">
+          <div class="field">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" min="10" max="100" step="1" required placeholder="e.g. 21" />
+            <span class="hint">10–100 years</span>
+            <span class="error-msg" data-for="age"></span>
+          </div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected hidden>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <span class="error-msg" data-for="gender"></span>
+          </div>
+          <div class="field">
+            <label for="country">Country</label>
+            <select id="country" name="country" required>
+              <option value="" disabled selected hidden>Select country</option>
+              <option value="India">India</option>
+              <option value="USA">USA</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="UK">UK</option>
+              <option value="Germany">Germany</option>
+              <option value="Mexico">Mexico</option>
+              <option value="Turkey">Turkey</option>
+              <option value="France">France</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="error-msg" data-for="country"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 02: Digital & Academic Rhythm -->
+      <fieldset class="group">
+        <legend><span class="legend-index">02</span> Academic &amp; Digital Habits</legend>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="academic_level">Academic Level</label>
+            <select id="academic_level" name="academic_level" required>
+              <option value="" disabled selected hidden>Select level</option>
+              <option value="High School">High School</option>
+              <option value="Undergraduate">Undergraduate</option>
+              <option value="Graduate">Graduate</option>
+            </select>
+            <span class="error-msg" data-for="academic_level"></span>
+          </div>
+          <div class="field">
+            <label for="most_used_platform">Primary Social Platform</label>
+            <select id="most_used_platform" name="most_used_platform" required>
+              <option value="" disabled selected hidden>Select platform</option>
+              <option value="Instagram">Instagram</option>
+              <option value="YouTube">YouTube</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Snapchat">Snapchat</option>
+              <option value="Twitter">Twitter</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Facebook">Facebook</option>
+              <option value="LINE">LINE</option>
+              <option value="KakaoTalk">KakaoTalk</option>
+              <option value="VKontakte">VKontakte</option>
+              <option value="WeChat">WeChat</option>
+            </select>
+            <span class="error-msg" data-for="most_used_platform"></span>
+          </div>
+          <div class="field">
+            <label for="purpose_of_use">Primary Purpose of Use</label>
+            <select id="purpose_of_use" name="purpose_of_use" required>
+              <option value="" disabled selected hidden>Select purpose</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Education">Education</option>
+              <option value="Networking">Networking</option>
+              <option value="News">News</option>
+            </select>
+            <span class="error-msg" data-for="purpose_of_use"></span>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label for="avg_daily_usage_hours">Daily Screen Time</label>
+              <span class="live-val" id="val-avg_daily_usage_hours">3.5 hrs</span>
+            </div>
+            <div class="range-row">
+              <input type="range" id="range-avg_daily_usage_hours" min="0" max="24" step="0.5" value="3.5" class="sync-range" />
+              <div class="unit-input">
+                <input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="0.1" required value="3.5" placeholder="0.0" />
+                <span class="unit">hrs</span>
+              </div>
+            </div>
+            <span class="error-msg" data-for="avg_daily_usage_hours"></span>
+          </div>
+          <div class="field field-span">
+            <div class="field-header">
+              <label for="daily_unlocks">Daily Phone Unlocks</label>
+              <span class="live-val" id="val-daily_unlocks">50 unlocks</span>
+            </div>
+            <div class="range-row">
+              <input type="range" id="range-daily_unlocks" min="0" max="250" step="5" value="50" class="sync-range" />
+              <div class="unit-input">
+                <input type="number" id="daily_unlocks" name="daily_unlocks" min="0" step="1" required value="50" placeholder="e.g. 50" />
+                <span class="unit">unlocks</span>
+              </div>
+            </div>
+            <span class="error-msg" data-for="daily_unlocks"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 03: Lifestyle & Stress -->
+      <fieldset class="group">
+        <legend><span class="legend-index">03</span> Lifestyle &amp; Perceived Strain</legend>
+        <div class="grid grid-3">
+          <div class="field">
+            <div class="field-header">
+              <label for="study_hours">Study Time / Day</label>
+              <span class="live-val" id="val-study_hours">4.0 hrs</span>
+            </div>
+            <div class="range-row">
+              <input type="range" id="range-study_hours" min="0" max="18" step="0.5" value="4.0" class="sync-range" />
+              <div class="unit-input">
+                <input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.1" required value="4.0" placeholder="0.0" />
+                <span class="unit">hrs</span>
+              </div>
+            </div>
+            <span class="error-msg" data-for="study_hours"></span>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label for="physical_activity_hours">Physical Activity</label>
+              <span class="live-val" id="val-physical_activity_hours">1.0 hrs</span>
+            </div>
+            <div class="range-row">
+              <input type="range" id="range-physical_activity_hours" min="0" max="10" step="0.5" value="1.0" class="sync-range" />
+              <div class="unit-input">
+                <input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.1" required value="1.0" placeholder="0.0" />
+                <span class="unit">hrs</span>
+              </div>
+            </div>
+            <span class="error-msg" data-for="physical_activity_hours"></span>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label for="sleep_hours_per_night">Sleep / Night</label>
+              <span class="live-val" id="val-sleep_hours_per_night">7.0 hrs</span>
+            </div>
+            <div class="range-row">
+              <input type="range" id="range-sleep_hours_per_night" min="0" max="14" step="0.5" value="7.0" class="sync-range" />
+              <div class="unit-input">
+                <input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.1" required value="7.0" placeholder="0.0" />
+                <span class="unit">hrs</span>
+              </div>
+            </div>
+            <span class="error-msg" data-for="sleep_hours_per_night"></span>
+          </div>
+
+          <div class="field field-span">
+            <label id="stress_label">Perceived Stress Level</label>
+            <div class="segmented" id="stress_level_group" data-name="stress_level" role="radiogroup" aria-labelledby="stress_label">
+              <button type="button" class="seg-btn" data-value="Low" role="radio" aria-checked="false">Low</button>
+              <button type="button" class="seg-btn" data-value="Medium" role="radio" aria-checked="false">Medium</button>
+              <button type="button" class="seg-btn" data-value="High" role="radio" aria-checked="false">High</button>
+              <button type="button" class="seg-btn" data-value="Very High" role="radio" aria-checked="false">Very High</button>
+            </div>
+            <input type="hidden" id="stress_level" name="stress_level" required />
+            <span class="error-msg" data-for="stress_level"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-footer">
+        <div class="footer-meta">
+          <span class="meta-dot"></span>
+          <span class="meta-text">Inputs evaluated live via trained Ridge ML model</span>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="btn-label">Calculate Mental Health Score</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- RESULT PANEL -->
+  <aside class="panel result-panel tilt-card" id="result-card" aria-live="polite">
+    <div class="card-glare" aria-hidden="true"></div>
+    <div class="result-inner" id="result-inner">
+
+      <!-- STATE: IDLE -->
+      <div class="state state-idle active" id="state-idle">
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 260 170" aria-hidden="true">
+            <defs>
+              <filter id="gaugeShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.25"/>
+              </filter>
+            </defs>
+            <path class="gauge-track" d="M 35 145 A 95 95 0 0 1 225 145" />
+            <g class="gauge-ticks" id="gauge-ticks-idle"></g>
+            <!-- Inactive Needle -->
+            <g class="gauge-needle-group" id="gauge-needle-idle" style="transform: rotate(-90deg);">
+              <line x1="130" y1="145" x2="130" y2="62" class="gauge-needle-shadow" />
+              <line x1="130" y1="145" x2="130" y2="62" class="gauge-needle-blade" />
+              <circle cx="130" cy="145" r="9" class="gauge-hub-base" />
+              <circle cx="130" cy="145" r="4.5" class="gauge-hub-cap" />
+            </g>
+          </svg>
+        </div>
+        <h2 class="idle-label">Your Signal Awaits</h2>
+        <p class="idle-copy">Fill in your daily rhythm or choose a quick scenario above to generate your predicted 0–10 mental wellness score.</p>
+        <div class="idle-hint-chips">
+          <span class="hint-pill pill-strained">0.0 = Strained</span>
+          <span class="hint-pill pill-moderate">5.0 = Moderate</span>
+          <span class="hint-pill pill-resilient">10.0 = Resilient</span>
+        </div>
+      </div>
+
+      <!-- STATE: LOADING -->
+      <div class="state state-loading" id="state-loading" hidden>
+        <div class="loading-3d-sphere">
+          <div class="sphere-orbit sphere-orbit-1"></div>
+          <div class="sphere-orbit sphere-orbit-2"></div>
+          <div class="sphere-core"></div>
+        </div>
+        <h2 class="loading-label">Reading the Signal…</h2>
+        <p class="loading-copy">Running habits through trained regression weights.</p>
+      </div>
+
+      <!-- STATE: RESULT -->
+      <div class="state state-result" id="state-result" hidden>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 260 170" aria-hidden="true">
+            <defs>
+              <linearGradient id="scoreGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FF5A52"/>
+                <stop offset="35%" stop-color="#FFA84A"/>
+                <stop offset="68%" stop-color="#E5C74C"/>
+                <stop offset="100%" stop-color="#2DD4BF"/>
+              </linearGradient>
+            </defs>
+            <path class="gauge-track" d="M 35 145 A 95 95 0 0 1 225 145" />
+            <path class="gauge-fill" id="gauge-fill" d="M 35 145 A 95 95 0 0 1 225 145" />
+            <g class="gauge-ticks" id="gauge-ticks-result"></g>
+            <!-- Active 3D Needle -->
+            <g class="gauge-needle-group" id="gauge-needle-group" style="transform: rotate(-90deg);">
+              <line x1="130" y1="145" x2="130" y2="58" class="gauge-needle-shadow" />
+              <line x1="130" y1="145" x2="130" y2="58" class="gauge-needle-blade" />
+              <circle cx="130" cy="145" r="9" class="gauge-hub-base" />
+              <circle cx="130" cy="145" r="4.5" class="gauge-hub-cap" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="score-readout">
+          <span class="score-number" id="score-number">0.00</span>
+          <span class="score-max">/10</span>
+        </div>
+
+        <p class="score-band" id="score-band">—</p>
+        <p class="score-context" id="score-context"></p>
+
+        <!-- Wellness Factor Breakdown -->
+        <div class="breakdown-grid" id="breakdown-grid">
+          <div class="factor-item">
+            <span class="factor-title">Sleep / Screen</span>
+            <span class="factor-value" id="factor-ratio">—</span>
+          </div>
+          <div class="factor-item">
+            <span class="factor-title">Digital Intensity</span>
+            <span class="factor-value" id="factor-intensity">—</span>
+          </div>
+          <div class="factor-item">
+            <span class="factor-title">Physical Balance</span>
+            <span class="factor-value" id="factor-vitality">—</span>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button type="button" class="reset-btn" id="reset-btn">Run another read</button>
+        </div>
+      </div>
+
+      <!-- STATE: ERROR -->
+      <div class="state state-error" id="state-error" hidden>
+        <div class="error-icon" aria-hidden="true">
+          <span>!</span>
+        </div>
+        <h3 class="error-label" id="error-label">Submission Notice</h3>
+        <p class="error-copy" id="error-copy"></p>
+        <div class="error-actions">
+          <button type="button" class="reset-btn" id="error-retry-btn">Try again</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>Mental Health Signal is an educational ML demonstration modeling behavioral rhythms, not a clinical diagnostic instrument.</p>
+    <p class="footer-sub">If you or someone you know is feeling overwhelmed, confidential support is available 24/7 through crisis lifelines.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
