@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const LOCAL_API = "http://127.0.0.1:2200";
-  const CLOUD_API = "https://mansik-santulan-score.onrender.com";
+  const LOCAL_API = "https://mentalhealthpredictionmodel.onrender.com";
+  const CLOUD_API = "https://mentalhealthpredictionmodel.onrender.com";
   let activeApi = LOCAL_API;
   let isApiOnline = false;
 
@@ -51,7 +51,7 @@
         isApiOnline = true;
         statusDot.className = "status-dot online";
         statusText.textContent = "Local API :2200";
-        statusPill.title = "Connected to local FastAPI server (http://127.0.0.1:2200)";
+        statusPill.title = "Connected to local FastAPI server (https://mentalhealthpredictionmodel.onrender.com)";
         return;
       }
     } catch (_) {
