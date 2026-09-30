@@ -180,7 +180,7 @@ The dataset was partitioned into **$70\%$ Training ($n=3{,}498$)** and **$30\%$ 
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Linear Regression (OLS)** | $0.7237$ | $0.7398$ | $0.5362$ | $0.6760$ | Underfits non-linear interaction thresholds |
 | **Random Forest (Default, $B=100$)** | **$0.9808$** | **$0.8774$** | **$0.3477$** | **$0.4640$** | **Optimal generalization; lowest test error** |
-| **Random Forest (Tuned)** | $0.9546$ | $0.8651$ | $0.3688$ | $0.4867$ | Regularized ($\text{max\_depth}=15$, $\text{leaf}=2$) |
+| **Random Forest (Tuned)** | $0.9546$ | $0.8651$ | $0.3688$ | $0.4867$ | Regularized (`max_depth=15`, `min_samples_leaf=2`) |
 
 > **Champion Selection:** The default Random Forest regressor demonstrated the highest predictive capability on unseen test sets ($R^2 = 0.8774$, $\text{RMSE} = 0.4640$) and was serialized as `Mental_Health_Model.pkl` for production serving.
 
